@@ -116,22 +116,26 @@ document.addEventListener("DOMContentLoaded", function () {
         templateSection.style.display = "none";
         document.body.classList.remove('popup-large');
         event.preventDefault(); // Prevent the default form submission
-
-        // Gather form data from elements with the "database" class
+    
+        // Gather form data with corresponding label text and input values
         const formDataObject = {};
         console.log("start gathering data from form");
         const databaseInputs = document.querySelectorAll(".database");
         
         databaseInputs.forEach((input) => {
-            formDataObject[input.id] = input.value;
+            // Find the label that corresponds to this input
+            const label = document.querySelector(`label[for="${input.id}"]`);
+            // Use the label's text as the key and the input's value as the value
+            const key = label ? label.innerText.trim() : input.id;
+            formDataObject[key] = input.value;
         });
-
+    
         console.log("form data collected:", formDataObject);
-
+    
         // Send the form data to the content script
         sendFormDataToBackgroundScript(formDataObject);
     });
-
+    
     // Function to send form data to background script
     function sendFormDataToBackgroundScript(formData) {
         chrome.runtime.sendMessage({ message: "template_submit", formData: formData }, function (response) {
@@ -141,8 +145,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("Response from background script:", response);
             }
         });
-
+    
     }
+    
 
 
 });
