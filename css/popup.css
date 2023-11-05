@@ -1,0 +1,15 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+ }
+ 
+ .btn {
+    width: 100%;
+    margin-bottom: 10px;
+ }
+
+
+.popup-large {
+   min-height: 600px; 
+   min-width: 600px;
+}

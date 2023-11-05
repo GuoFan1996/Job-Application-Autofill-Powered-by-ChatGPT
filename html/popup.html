@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OfferGPT</title>
+    <link rel="stylesheet" type="text/css" href="../css/popup.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    
+    <script type="module" src="js/background.js"></script>
+</head>
+<body>
+    <div class="container" style="display: none;" id = "templateSection">
+        <h1 class="mt-5">Job Application Form</h1>
+        <form id="jobApplicationForm" class="mt-4">
+            <!-- Personal Details -->
+            <fieldset>
+                <legend>Personal Details</legend>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" class="form-control database" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="middleName">Middle Name:</label>
+                        <input type="text" class="form-control database" id="middleName" name="middleName">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" class="form-control database" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="tel" class="form-control database" id="phoneNumber" name="phoneNumber" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="email">Email Address:</label>
+                        <input type="email" class="form-control database" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="streetAddress">Street Address:</label>
+                        <input type="text" class="form-control database" id="streetAddress" name="streetAddress" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="city">City:</label>
+                        <input type="text" class="form-control database" id="city" name="city" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="state">State/Province:</label>
+                        <input type="text" class="form-control database" id="state" name="state" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="zipCode">Zip/Postal Code:</label>
+                        <input type="text" class="form-control database" id="zipCode" name="zipCode" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="country">Country:</label>
+                        <input type="text" class="form-control database" id="country" name="country" required>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Professional Online Profiles -->
+            <fieldset>
+                <legend>Professional Online Profiles</legend>
+                <div class="form-group">
+                    <label for="linkedinUrl">LinkedIn Profile URL:</label>
+                    <input type="url" class="form-control database" id="linkedinUrl" name="linkedinUrl">
+                
+            
+                </div>
+                <div class="form-group">
+                    <label for="githubUrl">GitHub Profile URL:</label>
+                    <input type="url" class="form-control database" id="githubUrl" name="githubUrl">
+                </div>
+                <div class="form-group">
+                    <label for="otherLinks">Other Relevant Links:</label>
+                    <input type="url" class="form-control database" id="otherLinks" name="otherLinks" placeholder="Portfolio, blogs, etc.">
+                </div>
+            </fieldset>
+        
+            <!-- Job Position Details -->
+            <fieldset>
+                <legend>Job Position Details</legend>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="desiredSalary">Desired Salary:</label>
+                        <input type="text" class="form-control database" id="desiredSalary" name="desiredSalary" placeholder="Enter desired salary" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dateAvailableToStart">Date Available to Start:</label>
+                        <input type="date" class="form-control database" id="dateAvailableToStart" name="dateAvailableToStart" required>
+                    </div>
+                </div>
+            </fieldset>
+        
+            <!-- Educational Background -->
+            <fieldset>
+                <legend>Educational Background</legend>
+                <div class="form-group">
+                    <label for="institutionName">Institution/University Name:</label>
+                    <input type="text" class="form-control database" id="institutionName" name="institutionName" required>
+                </div>
+                <div class="form-group">
+                    <label for="fieldOfStudy">Major/Field of Study:</label>
+                    <input type="text" class="form-control database" id="fieldOfStudy" name="fieldOfStudy" required>
+                </div>
+                <div class="form-group">
+                    <label for="educationDate">Date (month/yyyy - month/yyyy):</label>
+                    <input type="text" class="form-control database" id="educationDate" name="educationDate" placeholder="Enter date range" required>
+                </div>
+            </fieldset>
+        
+            <!-- Work Experience -->
+            <fieldset>
+                <legend>Work Experience</legend>
+                <div class="form-group">
+                    <label for="company">Company:</label>
+                    <input type="text" class="form-control database" id="company" name="company" required>
+                </div>
+                <div class="form-group">
+                    <label for="jobTitle">Job Title:</label>
+                    <input type="text" class="form-control database" id="jobTitle" name="jobTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="text" class="form-control database" id="startDate" name="startDate" placeholder="mm/yyyy" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">End Date:</label>
+                    <input type="text" class="form-control database" id="endDate" name="endDate" placeholder="mm/yyyy">
+                </div>
+                <div class="form-group">
+                    <label for="jobResponsibilities">Job Responsibilities:</label>
+                    <textarea class="form-control database" id="jobResponsibilities" name="jobResponsibilities" rows="4" required></textarea>
+                </div>
+            </fieldset>
+        
+            <!-- Skills and Certifications -->
+            <fieldset>
+                <legend>Skills</legend>
+                <div class="form-group">
+                    <label for="skills">Enter Skills:</label>
+                    <textarea class="form-control database" id="skills" name="skills" rows="4" cols="50"></textarea>
+                </div>
+            </fieldset>
+        
+            <!-- Eligibility and Compliance -->
+            <fieldset>
+                <legend>Eligibility and Compliance</legend>
+                <div class="form-group">
+                    <label for="legalWorkStatus">Legal Work Status:</label>
+                    <select class="form-control database" id="legalWorkStatus" name="legalWorkStatus">
+                        <option value="citizen">Citizen</option>
+                        <option value="permanentResident">Permanent Resident</option>
+                        <option value="visaHolder">Visa Holder</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Willing to Relocate?</label>
+                    <div class="form-check">
+                        <input class="form-check-input database" type="radio" id="relocateYes" name="relocate" value="yes">
+                        <label class="form-check-label" for="relocateYes">Yes</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input database" type="radio" id="relocateNo" name="relocate" value="no">
+                        <label class="form-check-label" for="relocateNo">No</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Willing to Travel?</label>
+                    <div class="form-check">
+                        <input class="form-check-input database" type="radio" id="travelYes" name="travel" value="yes">
+                        <label class="form-check-label" for="travelYes">Yes</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input database" type="radio" id="travelNo" name="travel" value="no">
+                        <label class="form-check-label" for="travelNo">No</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="convicted">Have you ever been convicted of a crime?</label>
+                    <div class="form-check">
+                        <input class="form-check-input database" type="radio" id="convictedYes" name="convicted" value="yes">
+                        <label class="form-check-label" for="convictedYes">Yes</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input database" type="radio" id="convictedNo" name="convicted" value="no">
+                        <label class="form-check-label" for="convictedNo">No</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="howDidYouHear">How did you hear about this position?</label>
+                    <input type="text" class="form-control database" id="howDidYouHear" name="howDidYouHear">
+                </div>
+                <div class="form-group">
+                    <label for="languagesSpoken">Languages Spoken:</label>
+                    <textarea class="form-control database" id="languagesSpoken" name="languagesSpoken" rows="4" cols="50"></textarea>
+                </div>
+            </fieldset>
+  
+            <!-- Diversity Information -->
+            <fieldset>
+                <legend>Diversity Information</legend>
+                <div class="form-group">
+                <label for="genderSelect">Gender:</label>
+                <select class="form-control database" id="genderSelect" name="genderSelect">
+                    <option value="">Select ...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="nonBinary">Non-Binary</option>
+                    <option value="decline">Decline to self-identify</option>
+                </select>
+                </div>
+
+                <div class="form-group">
+                <label for="raceSelect">Race/Ethnicity:</label>
+                <select class="form-control database" id="raceSelect" name="raceSelect">
+                    <option value="">Select ...</option>
+                    <option value="hispanicLatino">Hispanic or Latino</option>
+                    <option value="white">White (Not Hispanic or Latino)</option>
+                    <option value="blackAfricanAmerican">Black or African American (Not Hispanic or Latino)</option>
+                    <option value="nativeHawaiianPacificIslander">Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino)</option>
+                    <option value="asian">Asian (Not Hispanic or Latino)</option>
+                    <option value="americanIndianAlaskaNative">American Indian or Alaska Native (Not Hispanic or Latino)</option>
+                    <option value="twoOrMoreRaces">Two or More Races (Not Hispanic or Latino)</option>
+                </select>
+                </div>
+
+                <div class="form-group">
+                <label for="veteranSelect">Veteran Status:</label>
+                <select class="form-control database" id="veteranSelect" name="veteranSelect">
+                    <option value="">Select ...</option>
+                    <option value="veteran">I am a veteran</option>
+                    <option value="notVeteran">I am not a veteran</option>
+                    <option value="declineVeteran">Decline to self-identify</option>
+                </select>
+                </div>
+
+                <div class="form-group">
+                <label for="disabilitySelect">Disability Status:</label>
+                <select class="form-control database" id="disabilitySelect" name="disabilitySelect">
+                    <option value="">Select ...</option>
+                    <option value="personWithDisability">I am a person with a disability</option>
+                    <option value="notDisabled">I am not disabled</option>
+                    <option value="declineDisability">Decline to self-identify</option>
+                </select>
+                </div>
+            </fieldset>
+
+            <!-- Data Privacy and Consent -->
+            <fieldset>
+                <legend>Data Privacy and Consent</legend>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input database" id="consentCheckbox" name="consentCheckbox" required>
+                    <label class="form-check-label" for="consentCheckbox">I authorize offer-GPT to process my personal data.</label>
+                </div>
+            </fieldset>
+        
+            <!-- Submit Button -->
+            <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
+        </form>
+        
+    </div>
+
+    <div class="container mt-3">
+        <button id="login" class="btn btn-primary mb-2">Log In</button>
+        <button id="createTemplateButton" class="btn btn-primary mb-2" style="display: none;">Template</button>
+        <button id="autofill" class="btn btn-info" style="display: none;">Autofill</button>
+        <button id="logout" class="btn btn-danger mb-2" style="display: none;">Log Out</button>
+    </div>
+    <script src="../js/popup.js" defer></script>
+
+</body>
+</html>

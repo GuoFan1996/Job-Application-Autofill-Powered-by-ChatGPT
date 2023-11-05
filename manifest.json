@@ -1,0 +1,55 @@
+{
+    "manifest_version": 3,
+    "name": "Job Application Autofill",
+    "description": "Autofill job applications using ChatGPT",
+    "version": "1.0",
+    "icons": {
+        "48": "images/web.png"
+    },
+    "action": {
+        "default_icon": {
+            "48": "images/web.png"
+        },
+        "default_popup": "html/popup.html"
+    },
+    "permissions": [
+        "activeTab",
+        "identity",
+        "scripting",
+        "tabs",
+        "storage"
+    ],
+    "background": {
+        "service_worker": "js/background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "js/content.js"
+            ]
+        }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self' 'wasm-unsafe-eval' http://localhost:* http://127.0.0.1:*; object-src 'self'",
+        "script-src": [
+            "'self'",
+            "https://www.gstatic.com",
+            "https://accounts.google.com", 
+            "https://cdnjs.cloudflare.com",
+            "https://maxcdn.bootstrapcdn.com",
+            "chrome-extension://mijcnfgnfclcehbdfofcjgobcbkmffob/libs/"
+        ],
+        "connect-src": "http://localhost:3000/"
+    },
+    "oauth2": {
+        "client_id": "412156803566-0afifv5ameino15ngl1jekqtcodb2q7j.apps.googleusercontent.com",
+        "scopes": [
+            "openid",
+            "email",
+            "profile"
+        ]
+    }
+}
