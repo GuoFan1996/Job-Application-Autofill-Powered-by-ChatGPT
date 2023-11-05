@@ -33,9 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 在页面加载或模板打开的事件中加入这部分来加载数据
     function loadDataToForm() {
-
         // 或者使用chrome.storage
         chrome.storage.local.get('formData', function(result) {
             if (result.formData) {
@@ -83,14 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-    
-    
-      
-      
-
-    // 调用这个函数
-    document.addEventListener('DOMContentLoaded', loadDataToForm);
-
 
     // Check the user's authentication status when the popup is opened
     getAuthToken(function (token) {
@@ -130,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Show the "createTemplateButton" and "autofillButton"
                 createTemplateButton.style.display = "block";
                 autofillButton.style.display = "block";
+                loadDataToForm();
             } else {
                 // Authentication failed
                 console.log("Authentication failed.");
@@ -142,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (templateSection.style.display === "none" || templateSection.style.display === "") {
             templateSection.style.display = "block";
             document.body.classList.add('popup-large');
-            loadDataToForm(); // 调用此函数来加载数据
+            loadDataToForm(); //display data
         } else {
             templateSection.style.display = "none";
             document.body.classList.remove('popup-large');
@@ -171,43 +162,51 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Add event listener for form submission
+    // Add event listener for form submission
     form.addEventListener("submit", function (event) {
         event.preventDefault(); // Prevent the default form submission
         console.log("Form submitted");
-    
+
         // Hide the template section and adjust body class
         templateSection.style.display = "none";
         document.body.classList.remove('popup-large');
-    
+
         // Gather form data with corresponding label text and input values
         const formDataObject = {};
         console.log("start gathering data from form");
-    
+
         const formGroups = document.querySelectorAll(".form-group");
-        
+
         formGroups.forEach((group) => {
-            const label = group.querySelector("label").innerText.trim();
+            const label = group.querySelector("label")?.innerText.trim(); // Use optional chaining in case label is not found
             let value;
-    
-            // Check if this group has input[type="text"], textarea, selected radio or select
-            if (group.querySelector("input[type='text'], textarea")) {
-                value = group.querySelector("input[type='text'], textarea").value;
-            } else if (group.querySelector("input[type='radio']:checked")) {
-                value = group.querySelector("input[type='radio']:checked").value;
-            } else if (group.querySelector("select")) {
-                value = group.querySelector("select").value;
+
+            // Include input[type="text"], input[type="tel"], input[type="email"], textarea, selected radio, or select
+            const input = group.querySelector("input[type='text'], input[type='tel'], input[type='email'], textarea, select, input[type='checkbox'], input[type='radio']:checked");
+
+            if (input) {
+                if (input.type === 'checkbox') {
+                    value = input.checked ? 'yes' : 'no'; // Or any other value you want to store for checkboxes
+                } else if (input.type === 'radio') {
+                    value = input.checked ? input.value : null;
+                } else {
+                    value = input.value;
+                }
             } else {
                 value = null;
             }
-    
-            formDataObject[label] = value;
+
+            if (label) {
+                formDataObject[label] = value;
+            }
         });
-    
+
         console.log("form data collected:", formDataObject);
-    
+
         // Send the form data to the content script
         sendFormDataToBackgroundScript(formDataObject);
     });
+
     
     // Function to send form data to background script
     function sendFormDataToBackgroundScript(formData) {

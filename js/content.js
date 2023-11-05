@@ -2,45 +2,62 @@ console.log("Content script loaded!");
 
 
 // Function to call the GPT API
-async function callGPTAPI(prompt) {
+async function callGPTAPI(identifiers) {
     try {
-        let response = await fetch('http://localhost:3000/api/openai', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ prompt: prompt })
+        // First, get data from storage.local
+        chrome.storage.local.get(['formData'], async function(result) {
+            // Ensure there's no error in getting storage data
+            if (chrome.runtime.lastError) {
+                throw new Error(chrome.runtime.lastError.message);
+            }
+
+            // Combine storage data with the prompt
+            const combinedData = {
+                identifiers: identifiers,
+                storageData: JSON.stringify(result.formData)
+            };
+
+            // Then, make the fetch request using the combined data
+            let response = await fetch('http://localhost:3000/api/openai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(combinedData)
+            });
+
+            // Check if the fetch request was successful
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Retrieve the generated text from the response directly
+            const responseData = await response.json();
+            console.log("GPT generated: ", responseData);
+
+            // Check if the response data is in the expected format
+            if (!responseData || !responseData.text) {
+                throw new Error('Unexpected response format from OpenAI.');
+            }
+
+            // Process the response data
+            const responseText = responseData.text;
+            console.log(responseText);
+            // Replace single quotes with double quotes to prepare for JSON parsing
+            const formattedResponse = responseText.replace(/'/g, '"');
+
+            // Convert the formatted string into an array
+            const databaseKeysArray = JSON.parse(formattedResponse);
+            console.log("Formatted response is: ", databaseKeysArray);
+            return databaseKeysArray; // Return the parsed array directly
         });
-        
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        
-        // Directly retrieve the generated text from the response
-        const responseData = await response.json();
-
-        console.log("gpt generated: ", responseData);
-
-        if (!responseData || !responseData.text) {
-            throw new Error('Unexpected response format from OpenAI.');
-        }
-
-        // Extract the 'text' attribute from responseData
-        const responseText = responseData.text;
-        console.log(responseText);
-        // Replace single quotes with double quotes
-        const formattedResponse = responseText.replace(/'/g, '"');
-
-        // Convert the formatted string into an array
-        const databaseKeysArray = JSON.parse(formattedResponse);
-        console.log("formattedResponse is: ",databaseKeysArray);
-        return databaseKeysArray; // return the parsed array directly
 
     } catch (error) {
-        console.error('Error calling OpenAI:', error);
+        console.error('Error while calling OpenAI or accessing storage:', error);
         throw error;
     }
 }
+
 
 
 
