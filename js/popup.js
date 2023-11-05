@@ -33,6 +33,65 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // 在页面加载或模板打开的事件中加入这部分来加载数据
+    function loadDataToForm() {
+
+        // 或者使用chrome.storage
+        chrome.storage.local.get('formData', function(result) {
+            if (result.formData) {
+                const savedData = result.formData;
+                populateFormWithData(savedData);
+            }
+        });
+    }
+
+    function populateFormWithData(formData) {
+        // Iterate over all entries in the formData
+        Object.keys(formData).forEach(key => {
+            // Find the form element with the corresponding 'id' or 'name'
+            const element = document.getElementById(key) || document.getElementsByName(key)[0];
+    
+            // Check if the element exists
+            if (element) {
+                // Handle checkboxes separately
+                if (element.type === "checkbox") {
+                    // Set the 'checked' property according to the formData value
+                    element.checked = formData[key] === "true" || formData[key] === true;
+                }
+                // Handle select elements separately
+                else if (element.tagName === "SELECT") {
+                    // Find and select the option that matches the value from formData
+                    Array.from(element.options).forEach(option => {
+                        if (option.value === formData[key]) {
+                            option.selected = true;
+                        }
+                    });
+                }
+                // Handle radio buttons separately
+                else if (element.type === "radio") {
+                    // Check the radio button that corresponds to the formData value
+                    const radioToCheck = document.querySelector(`input[type="radio"][name="${key}"][value="${formData[key]}"]`);
+                    if (radioToCheck) {
+                        radioToCheck.checked = true;
+                    }
+                }
+                // Handle other input types (including text, email, tel, etc.)
+                else if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                    // Set the value of the input based on formData
+                    element.value = formData[key];
+                }
+            }
+        });
+    }
+    
+    
+      
+      
+
+    // 调用这个函数
+    document.addEventListener('DOMContentLoaded', loadDataToForm);
+
+
     // Check the user's authentication status when the popup is opened
     getAuthToken(function (token) {
         if (token) {
@@ -83,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (templateSection.style.display === "none" || templateSection.style.display === "") {
             templateSection.style.display = "block";
             document.body.classList.add('popup-large');
+            loadDataToForm(); // 调用此函数来加载数据
         } else {
             templateSection.style.display = "none";
             document.body.classList.remove('popup-large');
@@ -112,22 +172,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Add event listener for form submission
     form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
         console.log("Form submitted");
+    
+        // Hide the template section and adjust body class
         templateSection.style.display = "none";
         document.body.classList.remove('popup-large');
-        event.preventDefault(); // Prevent the default form submission
     
         // Gather form data with corresponding label text and input values
         const formDataObject = {};
         console.log("start gathering data from form");
-        const databaseInputs = document.querySelectorAll(".database");
+    
+        const formGroups = document.querySelectorAll(".form-group");
         
-        databaseInputs.forEach((input) => {
-            // Find the label that corresponds to this input
-            const label = document.querySelector(`label[for="${input.id}"]`);
-            // Use the label's text as the key and the input's value as the value
-            const key = label ? label.innerText.trim() : input.id;
-            formDataObject[key] = input.value;
+        formGroups.forEach((group) => {
+            const label = group.querySelector("label").innerText.trim();
+            let value;
+    
+            // Check if this group has input[type="text"], textarea, selected radio or select
+            if (group.querySelector("input[type='text'], textarea")) {
+                value = group.querySelector("input[type='text'], textarea").value;
+            } else if (group.querySelector("input[type='radio']:checked")) {
+                value = group.querySelector("input[type='radio']:checked").value;
+            } else if (group.querySelector("select")) {
+                value = group.querySelector("select").value;
+            } else {
+                value = null;
+            }
+    
+            formDataObject[label] = value;
         });
     
         console.log("form data collected:", formDataObject);
@@ -145,9 +218,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("Response from background script:", response);
             }
         });
-    
     }
-    
-
 
 });

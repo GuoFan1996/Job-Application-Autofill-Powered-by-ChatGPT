@@ -163,38 +163,30 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Willing to Relocate?</label>
-                    <div class="form-check">
-                        <input class="form-check-input database" type="radio" id="relocateYes" name="relocate" value="yes">
-                        <label class="form-check-label" for="relocateYes">Yes</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input database" type="radio" id="relocateNo" name="relocate" value="no">
-                        <label class="form-check-label" for="relocateNo">No</label>
-                    </div>
+                    <label for="relocate">Willing to Relocate?</label>
+                    <select class="form-control database" id="relocate" name="relocate">
+                        <option value="">--Please choose an option--</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>Willing to Travel?</label>
-                    <div class="form-check">
-                        <input class="form-check-input database" type="radio" id="travelYes" name="travel" value="yes">
-                        <label class="form-check-label" for="travelYes">Yes</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input database" type="radio" id="travelNo" name="travel" value="no">
-                        <label class="form-check-label" for="travelNo">No</label>
-                    </div>
+                    <label for="travel">Willing to Travel?</label>
+                    <select class="form-control database" id="travel" name="travel">
+                        <option value="">--Please choose an option--</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="convicted">Have you ever been convicted of a crime?</label>
-                    <div class="form-check">
-                        <input class="form-check-input database" type="radio" id="convictedYes" name="convicted" value="yes">
-                        <label class="form-check-label" for="convictedYes">Yes</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input database" type="radio" id="convictedNo" name="convicted" value="no">
-                        <label class="form-check-label" for="convictedNo">No</label>
-                    </div>
+                    <select class="form-control database" id="convicted" name="convicted">
+                        <option value="">--Please choose an option--</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
+                
 
                 <div class="form-group">
                     <label for="howDidYouHear">How did you hear about this position?</label>
