@@ -28,8 +28,6 @@ const client = axios.create({
 
 app.post('/api/openai', async (req, res) => {
     const { identifiers, storageData } = req.body; // Destructure both prompt and storageData from the request body
-    console.log("identifiers = ",identifiers);
-    console.log("storageData = ",storageData);
     // Construct the complete prompt including the information from storageData if needed
     const fullPrompt = constructPromptString(identifiers, storageData);
 
@@ -40,7 +38,7 @@ app.post('/api/openai', async (req, res) => {
             prompt: fullPrompt,
             model: "gpt-3.5-turbo-instruct",
             max_tokens: 1000,
-            temperature: 0,
+            temperature: 1,
         });
         
         // Extract the 'text' from the response and send it to the client
@@ -66,11 +64,18 @@ function constructPromptString(identifiers, storageData) {
     `
     + identifiersStr +
     `
-    Your task is to find corresponding value of key in 'storageData' to answer each element in 'identifiers' based on the provided information. Return an array of corresponding values in  'storageData'.
-    If no matching key/value is found for a specific element in 'identifiers', label it as 'not found'.
-    Your output array should have same length of 'identifiers'.
-    Please provide the desired result (only array, no more other words):
-    `;
+    Your task is to find corresponding value of key in 'storageData' to answer each element in 'identifiers' based on the provided information. Return a map where key is element in 'identifiers' and value is potential answer you find in values of  'storageData'.
+    Reqirement: 
+1.If no matching key is found or the corresponding found value is 'null' for a specific element in 'identifiers', don't show it in result map.
+2.Your output map should have has format like this:
+{
+ "Full name✱":"Guo Fan",
+"Current company":"USF",
+...
+}
+3.Please provide the desired result (only map itself, no more other words) and this result should be a valid JSON string.
+`;
+
     return res;
 }
 

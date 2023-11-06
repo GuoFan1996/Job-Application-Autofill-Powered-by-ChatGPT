@@ -125,25 +125,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     
         return true; // Indicates that you wish to send a response asynchronously
     }
-     else if (message.message === "GPT_response") {
-        (async () => {
-            try {
-
-                // Process the GPT response to obtain processedData
-                const processedData = await processGPTResponse(message.GPTresponse);
-    
-                // You can now use the processedData as needed in your background script
-                console.log("Processed Data:", processedData);
-    
-                //send a response back to the content script
-                sendResponse({ status: "GPT response processed successfully", result: processedData });
-            } catch (error) {
-                console.error("Error processing GPT response:", error);
-                sendResponse({ status: "Error processing GPT response", error: error.toString() });
-            }
-        })();
-        return true;  // Keeps the message channel open until sendResponse is called
-    }
     
 });
 
