@@ -88,7 +88,6 @@ function autofill(processedData) {
     });
 }
 
-
 chrome.runtime.onMessage.addListener(async function(request, _sender, sendResponse) {
     console.log("content.js received message:", request.message);
     if (request.message === "start_autofill") {

@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let value;
 
             // Include input[type="text"], input[type="tel"], input[type="email"], textarea, selected radio, or select
-            const input = group.querySelector("input[type='text'], input[type='tel'], input[type='email'], textarea, select, input[type='checkbox'], input[type='radio']:checked");
+            const input = group.querySelector("input[type='text'], input[type='tel'], input[type='email'], input[type='url'], input[type='date'], textarea, select, input[type='checkbox'], input[type='radio']:checked");
 
             if (input) {
                 if (input.type === 'checkbox') {

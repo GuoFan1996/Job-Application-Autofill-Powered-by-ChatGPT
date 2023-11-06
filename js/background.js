@@ -7,7 +7,10 @@ const googleOAuthConfig = {
     scope: 'openid email profile',
 };
 
-// Function to handle Google OAuth sign-in
+/**
+ * Handles Google OAuth2 sign-in process to get an authentication token.
+ * @param {function} callback - The function to call with the token or null on error.
+ */
 function handleGoogleSignIn(callback) {
     chrome.identity.getAuthToken({ interactive: true }, function (token) {
         if (chrome.runtime.lastError) {
@@ -43,47 +46,6 @@ function performLogout(callback) {
     });
 }
 
-// Function to process the response from GPT
-async function processGPTResponse(databaseKeysArray) {
-    try {
-        // Retrieve formData from local storage
-        const getFormData = () => {
-            return new Promise((resolve, reject) => {
-                chrome.storage.local.get({formData: {}}, function(result) {
-                    if (chrome.runtime.lastError) {
-                        reject(new Error('Error retrieving formData from local storage.'));
-                    } else {
-                        resolve(result.formData);
-                    }
-                });
-            });
-        };
-
-        const formData = await getFormData();
-        const processedData = [];
-
-        // Iterate over the databaseKeysArray
-        for (const item of databaseKeysArray) {
-            // Check if the item is an array of keys
-            if (Array.isArray(item)) {
-                // Concatenate the elements into a string
-                const combinedValues = item.map(k => formData[k] || "not found").join(" ");
-                processedData.push(combinedValues);
-            } else {
-                // Push the single value or "not found"
-                processedData.push(formData[item] || "not found");
-            }
-        }
-
-        return processedData;
-    } catch (error) {
-        console.error("Error processing GPT response:", error);
-        throw error;
-    }
-}
-
-
-
 // Listen for messages from other scripts
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.action === 'getAuthToken') {
@@ -96,35 +58,43 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             sendResponse({ success });
         });
         return true;
-    } else if (message.message === "template_submit") {
+    } // Check if the message received is a "template_submit" action.
+    else if (message.message === "template_submit") {
+        // Log that we've received a message from the popup script to submit the template.
         console.log("background.js received message from popup.js: template_submit");
     
-        // 从本地存储中获取现有的 formData
+        // Retrieve the existing formData from local storage.
         chrome.storage.local.get({formData: {}}, function(result) {
-            const storedFormData = result.formData;
-            const incomingFormData = message.formData;
+            const storedFormData = result.formData; // Current form data stored.
+            const incomingFormData = message.formData; // New form data to be stored.
     
-            // 更新存储的 formData
+            // Update the stored formData with the new values.
             for (const key in incomingFormData) {
+                // Check if the key exists on the incomingFormData object to prevent prototype pollution.
                 if (incomingFormData.hasOwnProperty(key)) {
-                    storedFormData[key] = incomingFormData[key];
+                    storedFormData[key] = incomingFormData[key]; // Assign new data to the stored data.
                 }
             }
     
-            // 将更新后的 formData 保存回本地存储
+            // Save the updated formData back to local storage.
             chrome.storage.local.set({formData: storedFormData}, function() {
+                // Check if there was an error during the save process.
                 if (chrome.runtime.lastError) {
+                    // Log the error and send a response indicating failure to save the form data.
                     console.error("Error saving form data to chrome.storage:", chrome.runtime.lastError);
                     sendResponse({ success: false, error: "Failed to save form data." });
                 } else {
+                    // Log success and send a response indicating the form data was saved successfully.
                     console.log("Form data saved to chrome.storage:", storedFormData);
                     sendResponse({ success: true });
                 }
             });
         });
     
-        return true; // Indicates that you wish to send a response asynchronously
+        // Return true to indicate that the response will be sent asynchronously.
+        return true;
     }
+    
     
 });
 
