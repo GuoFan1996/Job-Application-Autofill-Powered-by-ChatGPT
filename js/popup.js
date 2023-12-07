@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const logoutButton = document.getElementById("logout");
     const templateSection = document.getElementById("templateSection");
     const form = document.getElementById("jobApplicationForm");
-
+    const openQuestionGenerator = document.getElementById("open-question Generator");
     // Function to send a message to background.js to get auth token
     function getAuthToken(callback) {
         chrome.runtime.sendMessage({ action: 'getAuthToken' }, function (token) {
@@ -93,6 +93,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Show the "createTemplateButton" and "autofillButton"
             createTemplateButton.style.display = "block";
             autofillButton.style.display = "block";
+            openQuestionGenerator.style.display = 'block';
+            document.getElementById('question-generator').style.display = 'block';
         } else {
             // User is not authenticated
             console.log("User is not authenticated.");
@@ -102,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Hide the "createTemplateButton" and "autofillButton"
             createTemplateButton.style.display = "none";
             autofillButton.style.display = "none";
+            document.getElementById('question-generator').style.display = 'none';
         }
     });
 
@@ -120,6 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Show the "createTemplateButton" and "autofillButton"
                 createTemplateButton.style.display = "block";
                 autofillButton.style.display = "block";
+                openQuestionGenerator.style.display = 'block';
+
+                document.getElementById('question-generator').style.display = 'block';
                 loadDataToForm();
             } else {
                 // Authentication failed
@@ -140,6 +146,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    openQuestionGenerator.addEventListener('click', function() {
+        const formdiv = document.getElementById('question-form');
+        if (formdiv.style.display === 'block') {
+            formdiv.style.display = 'none';
+            document.body.classList.remove('popup-large');
+        }else {
+            formdiv.style.display = 'block';
+            document.body.classList.add('popup-large');
+        }
+        
+    });
+
     // Add event listener for autofill button
     autofillButton.addEventListener("click", function () {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -157,6 +175,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Add event listener for the "logout" button
     logoutButton.addEventListener("click", function () {
+        document.getElementById('question-generator').style.display = 'none';
+        openQuestionGenerator.style.display = 'none';
+        
+        
         // Call the performLogout function to initiate logout
         performLogout();
     });

@@ -37,7 +37,7 @@ app.post('/api/openai', async (req, res) => {
         const openaiResponse = await client.post('https://api.openai.com/v1/completions', {
             prompt: fullPrompt,
             model: "gpt-3.5-turbo-instruct",
-            max_tokens: 1000,
+            max_tokens: 2000,
             temperature: 1,
         });
         
@@ -66,14 +66,9 @@ function constructPromptString(identifiers, storageData) {
     `
     Your task is to find corresponding value of key in 'storageData' to answer each element in 'identifiers' based on the provided information. Return a map where key is element in 'identifiers' and value is potential answer you find in values of  'storageData'.
     Reqirement: 
-1.If no matching key is found or the corresponding found value is 'null' for a specific element in 'identifiers', don't show it in result map.
-2.Your output map should have has format like this:
-{
- "Full name✱":"Guo Fan",
-"Current company":"USF",
-...
-}
-3.Please provide the desired result (only map itself, no more other words) and this result should be a valid JSON string.
+1.If no matching key is found or the corresponding found value is 'null' for a specific element in 'identifiers',you can either set value as "", or generate a answer based on storageData.
+2.Your output nust is a json format:
+3.Please provide the desired result (only json itself, no more other words) and this result should be a valid JSON string.
 `;
 
     return res;

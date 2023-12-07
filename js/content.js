@@ -1,3 +1,4 @@
+
 console.log("Content script loaded!");
 
 // This array will store all the text labels and is declared globally
@@ -44,9 +45,18 @@ async function callGPTAPI(identifiers) {
 
         // Process the response data
         const responseText = responseData.text;
-        const responseMap = JSON.parse(responseText);
-        console.log("json response is: ", responseMap);
-        return responseMap; // Return the parsed array directly
+        // Extract JSON string using a regular expression
+        const jsonMatch = responseText.match(/{[^}]+}/);
+        if (!jsonMatch) {
+            throw new Error('No valid JSON found in the response.');
+        }
+
+        // Parse the extracted JSON string
+        const jsonPart = jsonMatch[0];
+        const parsedJson = JSON.parse(jsonPart);
+
+        console.log("Parsed JSON:", parsedJson);
+        return parsedJson;
 
     } catch (error) {
         console.error('Error while calling OpenAI:', error);
@@ -75,7 +85,11 @@ function autofill(processedData) {
                     if (formElement.value === processedData[label]) {
                         formElement.checked = true;
                     }
-                } else {
+                } else if (formElement.type === 'file') {
+                    // Skip file inputs for security reasons
+                    console.warn(`Cannot programmatically set value for file input: ${formElementIdentifier}`);
+                }
+                else {
                     // For other input types, just set the value property
                     formElement.value = processedData[label];
                 }
