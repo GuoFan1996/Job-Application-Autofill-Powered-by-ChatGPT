@@ -241,4 +241,63 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    document.getElementById('question-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const companyDescription = document.getElementById('company-description').value;
+        const jobDescription = document.getElementById('job-description').value;
+        const openQuestion = document.getElementById('open-question').value;
+        const relatedPoints = document.getElementById('related-points').value;
+        const requirements = document.getElementById('requirements').value;
+        
+        // Function to call server's API
+        callGPTAPI(companyDescription, jobDescription, openQuestion, relatedPoints, requirements)
+            .then(response => {
+                document.getElementById('generated-answer-div').style.display = 'block';
+                console.log("response.data: ",response)
+                document.getElementById('generated-answer').innerHTML = response;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+    
+    async function callGPTAPI(companyDescription, jobDescription, openQuestion, relatedPoints, requirements) {
+        // Implement the logic to call server's API
+        const combinedData = {
+            companyDescription: companyDescription,
+            jobDescription: jobDescription,
+            openQuestion:openQuestion,
+            relatedPoints:relatedPoints,
+            requirements:requirements
+        };
+
+        // Then, make the fetch request using the combined data
+        let response = await fetch('http://localhost:3000/api/openai', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(combinedData)
+        });
+
+        // Check if the fetch request was successful
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        // Retrieve the generated text from the response directly
+        const responseData = await response.json();
+
+        // Check if the response data is in the expected format
+        if (!responseData || !responseData.text) {
+            throw new Error('Unexpected response format from OpenAI.');
+        }
+
+        // Process the response data
+        const responseText = responseData.text;
+        console.log("generated answer:", responseText);
+        return responseText;
+    }
+    
+
 });

@@ -27,9 +27,21 @@ const client = axios.create({
 
 
 app.post('/api/openai', async (req, res) => {
-    const { identifiers, storageData } = req.body; // Destructure both prompt and storageData from the request body
-    // Construct the complete prompt including the information from storageData if needed
-    const fullPrompt = constructPromptString(identifiers, storageData);
+    const body = req.body;
+    let fullPrompt;
+
+    // Determine the type of request and construct the prompt
+    if ('identifiers' in body) {
+        // Handle the first type of call
+        const { identifiers, storageData } = body;
+        fullPrompt = constructPromptString(identifiers, storageData);
+    } else if ('companyDescription' in body) {
+        // Handle the second type of call
+        const { companyDescription, jobDescription, openQuestion, relatedPoints, requirements } = body;
+        fullPrompt = constructPromptStringForOpenQuestion(companyDescription, jobDescription, openQuestion, relatedPoints, requirements);
+    } else {
+        return res.status(400).json({ error: 'Invalid request structure' });
+    }
 
     console.log("Full OpenAI Prompt: ", fullPrompt);
 
@@ -73,6 +85,30 @@ function constructPromptString(identifiers, storageData) {
 
     return res;
 }
+
+function constructPromptStringForOpenQuestion(companyDescription, jobDescription, openQuestion, relatedPoints, requirements){
+    const principles = `
+    1. Study the job description carefully.
+    2. Provide relevant examples.
+    3. Reflect my personality.
+    4. Keep answers short, but in-depth and specific.`
+    const example = "Questions:Why should we employ you? Answer:I have been following your company for a while now. The information I gathered from the job description and my research on your company shows I am more than qualified for this role. I value collaboration and have a verifiable track record of meeting and exceeding sales quotas. I believe my experience, skills, and achievements have prepared me adequately for this role. If given the opportunity, I will use my experience and skills to improve the revenue generation of your company. "
+    const res = 
+    `Write a answer for me for this question: ` 
+    + openQuestion + 
+    ` The company description is: `
+    + companyDescription +
+    ` The job description is: `
+    + jobDescription +
+    ` You need to mention some following points in your answer: `
+    + relatedPoints +
+    ` Please make sure your answer satisfy following principles and requirements: `
+    + principles + requirements
+    ;
+
+    return res;
+}
+    
 
 
 app.listen(PORT, () => {
