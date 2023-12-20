@@ -164,5 +164,14 @@ We are excited to see how this tool evolves with your help. Together, we can cre
 
 Thank you for considering contributing to this project. Let's work together to make job application a breeze for everyone!
 
+## Tutorials
+**Chrome Cxtension:**
+https://developer.chrome.com/docs/extensions/get-started
+**Google OAuth:**
+https://developers.google.com/identity/protocols/oauth2
+**Use ChatGPT API in NodeJS**
+https://www.geeksforgeeks.org/how-to-use-chatgpt-api-in-nodejs/
+
+
 
 
